@@ -1,8 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 import mysql.connector as mysql
+from car_info import CarInfo
 
 class mainWindow:
+    USER_NAME = 'mcastre1'
+    PASSWORD = 'Mc255587!'
+    HOST = 'mysql.migcas21.dreamhosters.com'
+    DATABASE = 'cms_mark_db'
+
     def __init__(self):
         self.cars_list = []
         self.root = tk.Tk()
@@ -38,7 +44,7 @@ class mainWindow:
 
     # Gets all cars from the cars table from Database.
     def get_cars(self):
-        conn = mysql.connect(user='mcastre1', password='Mc255587!', host='mysql.migcas21.dreamhosters.com', database='cms_mark_db')
+        conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
         cursor = conn.cursor()
 
         query = ("SELECT * FROM Cars")
@@ -53,7 +59,9 @@ class mainWindow:
 
     def car_selected(self):
         selected_item = self.data_tree.focus()
-        print(f'RO: {self.data_tree.item(selected_item)["values"][0]}')
+        ro = self.data_tree.item(selected_item)["values"][0]
+
+        CarInfo(ro, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE)
 
 if __name__ == "__main__":
     mainWindow()
