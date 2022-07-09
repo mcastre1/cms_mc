@@ -8,7 +8,7 @@ class CarInfo():
         self.HOST = HOST
         self.DATABASE = DATABASE
         self.RO = RO
-        self.root = tk.Tk()
+        self.root = tk.Toplevel()
         self.make = ''
         self.model = ''
         self.year = ''
@@ -27,7 +27,7 @@ class CarInfo():
 
         self.year_label = tk.Label(self.root, text=self.year)
         self.year_label.pack(anchor='w',pady=5, padx=10)
-        
+
     def get_car_info(self):
         conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
         cursor = conn.cursor()

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import mysql.connector as mysql
 from car_info import CarInfo
+from create_car import CreateCar
 
 class mainWindow:
     USER_NAME = 'mcastre1'
@@ -10,12 +11,14 @@ class mainWindow:
     DATABASE = 'cms_mark_db'
 
     def __init__(self):
+        
         self.cars_list = []
         self.root = tk.Tk()
         self.root.title("CMS Markosian")
         self.get_cars()
         self.gui()
         self.root.mainloop()
+        
 
     def gui(self):
         # TreeView
@@ -41,6 +44,9 @@ class mainWindow:
 
         self.select_button = tk.Button(self.root, text="Select", command=self.car_selected)
         self.select_button.pack(pady=25,padx=25)
+        
+        self.create_button = tk.Button(self.root, text="Add new car", command=self.create_car)
+        self.create_button.pack(pady=25, padx=25)
 
     # Gets all cars from the cars table from Database.
     def get_cars(self):
@@ -62,6 +68,9 @@ class mainWindow:
         ro = self.data_tree.item(selected_item)["values"][0]
 
         CarInfo(ro, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE)
+
+    def create_car(self):
+        CreateCar()
 
 if __name__ == "__main__":
     mainWindow()
