@@ -40,7 +40,6 @@ class CarInfo():
             self.make = Make
             self.model = Model
             self.year = Year
-            #print(f"{RO}, {Make}, {Model}, {Year}")
 
         cursor.close()
         conn.close()

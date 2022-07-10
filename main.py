@@ -70,7 +70,7 @@ class mainWindow:
         CarInfo(ro, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE)
 
     def create_car(self):
-        CreateCar()
+        CreateCar(self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE)
 
 if __name__ == "__main__":
     mainWindow()

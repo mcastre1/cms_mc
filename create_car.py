@@ -1,11 +1,16 @@
 import tkinter as tk
 import datetime as dt
 from tkinter import ttk
+import mysql.connector as mysql
 
 class CreateCar():
     
 
-    def __init__(self):
+    def __init__(self, USERNAME, PASSWORD, HOST, DATABASE):
+        self.USER_NAME = USERNAME
+        self.PASSWORD = PASSWORD
+        self.HOST = HOST
+        self.DATABASE = DATABASE
         self.root = tk.Toplevel()
         self.root.geometry("400x400")
         self.make_options = ['Acura', 'Toyota', 'Chevrolet', 'Subaru', 'GMC', 'Volvo']
@@ -35,8 +40,30 @@ class CreateCar():
         self.year_option = tk.StringVar()
         self.year_dropdown = ttk.Combobox(self.root, textvariable=self.year_option)
         self.year_dropdown['values'] = [y for y in range(self.current_year + 1, self.current_year - 100, -1)]
+        self.year_dropdown['state'] = 'readonly'
         self.year_dropdown.grid(row=2, column=1, pady=5, padx=5)
 
+        self.create_button = tk.Button(self.root, text="Create", command=self.create_car)
+        self.create_button.grid(row=3, column=0, columnspan=2)
 
-if __name__ == "__main__":
-    CreateCar()
+    def create_car(self):
+        make = self.make_dropdown.get()
+        model = self.model_entry.get()
+        year = int(self.year_dropdown.get())
+        
+        if make and model and year:
+            conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
+            cursor = conn.cursor()
+
+            query = (f"INSERT INTO Cars(Make, Model, Year) VALUES ('{make}', '{model}', '{year}')")
+
+            cursor.execute(query)
+
+            print("Car added succesfully!")
+
+            cursor.close()
+            conn.commit()
+            conn.close()
+
+            self.root.destroy()
+        
