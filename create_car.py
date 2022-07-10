@@ -6,10 +6,11 @@ import mysql.connector as mysql
 class CreateCar():
     
 
-    def __init__(self, USERNAME, PASSWORD, HOST, DATABASE):
+    def __init__(self, USERNAME, PASSWORD, HOST, DATABASE, callback_populate_carview):
         self.USER_NAME = USERNAME
         self.PASSWORD = PASSWORD
         self.HOST = HOST
+        self.callback_populate_carview = callback_populate_carview
         self.DATABASE = DATABASE
         self.root = tk.Toplevel()
         self.root.geometry("400x400")
@@ -66,4 +67,5 @@ class CreateCar():
             conn.close()
 
             self.root.destroy()
+            self.callback_populate_carview()
         
