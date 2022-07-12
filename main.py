@@ -14,6 +14,7 @@ class mainWindow:
         
         self.cars_list = [] # Keep track of cars in database
         self.root = tk.Tk() # Starts new window
+        self.root.wm_state(newstate='zoomed')
         self.root.title("CMS Markosian") # Title of the above window
         self.gui() # Sets up all gui widgetsin the main window
         self.root.mainloop() # Listens to events and/or changes in the main window
@@ -56,6 +57,7 @@ class mainWindow:
         query = ("SELECT * FROM Cars")
 
         cursor.execute(query)
+        
 
         # For every found car in the database we add it to a list.
         for (RO, Make, Model, Year) in cursor:

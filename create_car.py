@@ -60,11 +60,21 @@ class CreateCar():
 
             cursor.execute(query)
 
-            print("Car added succesfully!")
+            ro = 0
+            ro = cursor.lastrowid # Gets the last inserted auto incremented column id inserted by cursor in this session.
+
+            # Create Parts Row
+            query = (f"INSERT INTO Parts(RO) VALUES ('{ro}')")
+            cursor.execute(query)
+
+            # Create Inspection Row
+            query = (f"INSERT INTO Inspection(RO) VALUES ('{ro}')")
+            cursor.execute(query)
 
             cursor.close()
             conn.commit()
             conn.close()
+
 
             self.root.destroy()
             self.callback_populate_carview()
