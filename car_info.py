@@ -38,7 +38,7 @@ class CarInfo():
 
         self.tabs_lf = ttk.Notebook(self.root)
         self.tabs_lf.add(PartsWidget(self.tabs_lf), text="Parts")
-        self.tabs_lf.add(Inspection(self.tabs_lf), text="Inspection")
+        self.tabs_lf.add(Inspection(self.tabs_lf, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE, self.RO), text="Inspection")
 
         self.tabs_lf.pack(fill='x')
 
