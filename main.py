@@ -11,9 +11,10 @@ class mainWindow:
     DATABASE = 'cms_mark_db'
 
     def __init__(self):
-        
+        self.conn = None
         self.cars_list = [] # Keep track of cars in database
         self.root = tk.Tk() # Starts new window
+        self.root.wm_state(newstate='zoomed')
         self.root.title("CMS Markosian") # Title of the above window
         self.gui() # Sets up all gui widgetsin the main window
         self.root.mainloop() # Listens to events and/or changes in the main window
@@ -50,19 +51,20 @@ class mainWindow:
     def get_cars(self):
         """Makes a connection to a remote database and retrieves all cars in it."""
         self.cars_list = []
-        conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
-        cursor = conn.cursor()
+        self.conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
+        cursor = self.conn.cursor()
 
         query = ("SELECT * FROM Cars")
 
         cursor.execute(query)
+        
 
         # For every found car in the database we add it to a list.
         for (RO, Make, Model, Year) in cursor:
             self.cars_list.append((RO, Make, Model, Year))
 
         cursor.close()
-        conn.close()
+        #self.conn.close()
 
     def populate_car_treeview(self):
         """Populate the actual car tree view."""
@@ -81,7 +83,7 @@ class mainWindow:
         selected_item = self.data_tree.focus()
         ro = self.data_tree.item(selected_item)["values"][0]
 
-        CarInfo(ro, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE)
+        CarInfo(ro, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE, self.conn)
 
     def create_car(self):
         CreateCar(self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE, self.populate_car_treeview)
