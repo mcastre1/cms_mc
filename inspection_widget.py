@@ -2,9 +2,10 @@ import tkinter as tk
 from turtle import position
 import mysql.connector as mysql
 class Inspection(tk.Frame):
-    def __init__(self, parent, USER_NAME, PASSWORD, HOST, DATABASE, RO):
+    def __init__(self, parent, USER_NAME, PASSWORD, HOST, DATABASE, RO, CONN):
         tk.Frame.__init__(self, parent)
 
+        self.conn = CONN
         self.USER_NAME = USER_NAME
         self.PASSWORD = PASSWORD
         self.HOST = HOST
@@ -16,8 +17,8 @@ class Inspection(tk.Frame):
         self.populate_gui()
 
     def get_info(self):
-        conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
-        cursor = conn.cursor()
+        #conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
+        cursor = self.conn.cursor()
 
         query = (f"SELECT * FROM Inspection WHERE RO = {self.RO}")
 
@@ -27,8 +28,8 @@ class Inspection(tk.Frame):
             self.info = list(item)
 
         cursor.close()
-        conn.commit()
-        conn.close()
+        self.conn.commit()
+        #conn.close()
 
     def populate_gui(self):
         self.inspect_lf = tk.LabelFrame(self, text="Car Inspection: ")
@@ -77,15 +78,21 @@ class Inspection(tk.Frame):
         self.save_button.pack(side="right")
 
     def save(self):
-        conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
-        cursor = conn.cursor()
+        #conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
+        cursor = self.conn.cursor()
 
-        query = (f"UPDATE Inspection SET Express = '{self.express_t.get('1.0',tk.END)}' WHERE RO = {self.RO}")
+        query = (f"UPDATE Inspection SET Express = '{self.express_t.get('1.0',tk.END)}',"+
+                f"Stock = '{self.stock_t.get('1.0', tk.END)}',"+
+                f"Inspector = '{self.Inspector_t.get('1.0',tk.END)}',"+
+                f"GPS_Locates = '{self.GPSLocates_t.get('1.0', tk.END)}',"+
+                f"Body_Work_Needed = '{self.body_work_t.get('1.0',tk.END)}',"+
+                f"Working_Keys = '{self.working_keys_t.get('1.0',tk.END)}' "+
+                f"WHERE RO = {self.RO}")
 
         cursor.execute(query)
         cursor.close()
-        conn.commit()
-        conn.close()
+        self.conn.commit()
+        #conn.close()
 
     def update(self):
         pass

@@ -6,7 +6,8 @@ from parts_widget import PartsWidget
 from inspection_widget import Inspection
 
 class CarInfo():
-    def __init__(self, RO, USER_NAME, PASSWORD, HOST, DATABASE):
+    def __init__(self, RO, USER_NAME, PASSWORD, HOST, DATABASE, CONN):
+        self.conn = CONN
         self.USER_NAME = USER_NAME
         self.PASSWORD = PASSWORD
         self.HOST = HOST
@@ -37,16 +38,16 @@ class CarInfo():
         self.year_label.pack(anchor='w',pady=5, padx=10)
 
         self.tabs_lf = ttk.Notebook(self.root)
-        self.tabs_lf.add(PartsWidget(self.tabs_lf), text="Parts")
-        self.tabs_lf.add(Inspection(self.tabs_lf, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE, self.RO), text="Inspection")
+        self.tabs_lf.add(PartsWidget(self.tabs_lf, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE,  self.RO, self.conn), text="Parts")
+        self.tabs_lf.add(Inspection(self.tabs_lf, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE, self.RO, self.conn), text="Inspection")
 
         self.tabs_lf.pack(fill='x')
 
 
 
     def get_car_info(self):
-        conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
-        cursor = conn.cursor()
+        #conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
+        cursor = self.conn.cursor()
 
         query = (f"SELECT * FROM Cars WHERE RO={self.RO}")
 
@@ -58,5 +59,5 @@ class CarInfo():
             self.year = Year
 
         cursor.close()
-        conn.close()
+        #conn.close()
 

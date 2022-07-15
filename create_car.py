@@ -6,8 +6,9 @@ import mysql.connector as mysql
 class CreateCar():
     
 
-    def __init__(self, USERNAME, PASSWORD, HOST, DATABASE, callback_populate_carview):
-        self.USER_NAME = USERNAME
+    def __init__(self, USERNAME, PASSWORD, HOST, DATABASE, callback_populate_carview, CONN):
+        self.conn = CONN
+        self.USER_NAME = USERNAME   
         self.PASSWORD = PASSWORD
         self.HOST = HOST
         self.callback_populate_carview = callback_populate_carview
@@ -53,8 +54,8 @@ class CreateCar():
         year = int(self.year_dropdown.get())
         
         if make and model and year:
-            conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
-            cursor = conn.cursor()
+            #conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
+            cursor = self.conn.cursor()
 
             query = (f"INSERT INTO Cars(Make, Model, Year) VALUES ('{make}', '{model}', '{year}')")
 
@@ -72,8 +73,8 @@ class CreateCar():
             cursor.execute(query)
 
             cursor.close()
-            conn.commit()
-            conn.close()
+            self.conn.commit()
+            #conn.close()
 
 
             self.root.destroy()
