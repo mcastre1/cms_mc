@@ -1,6 +1,7 @@
 import tkinter as tk
 import mysql.connector as mysql
 from create_part import CreatePart
+from tkinter import ttk
 
 class PartsWidget(tk.Frame):
     def __init__(self, parent, USER_NAME, PASSWORD, HOST, DATABASE, RO, CONN):
@@ -14,6 +15,9 @@ class PartsWidget(tk.Frame):
         self.RO = RO
         self.info = []
 
+        self.s = ttk.Style()
+        self.s.configure('Parts.Treeview', rowheight=40)
+
         self.RO = RO
         #self.get_info()
         #self.populate_gui()
@@ -22,7 +26,16 @@ class PartsWidget(tk.Frame):
         
     def gui_init(self):
         self.parts_lf = tk.LabelFrame(self, text = "Parts: ")
-        self.parts_lf.pack(fill='x')
+        #self.parts_lf.pack(fill='x')
+
+        columns = ['Part', 'Location']
+        self.data_tree = ttk.Treeview(self, columns=columns, show='headings', style='Parts.Treeview')
+        self.data_tree.column('Part', anchor='center')
+        self.data_tree.heading('Part', text='Part')
+        self.data_tree.column('Location', anchor='center')
+        self.data_tree.heading('Location', text='Location')
+
+        self.data_tree.pack(fill='x')
 
         self.parts_command_lf = tk.LabelFrame(self, text="Update/Save: ")
         self.parts_command_lf.pack(fill='x')
@@ -30,33 +43,28 @@ class PartsWidget(tk.Frame):
         self.save_button = tk.Button(self.parts_command_lf, text="Save", command=self.save)
         self.save_button.pack(side="right")
 
-    def populate_parts(self):
-        #temp = Part(self.parts_lf, "Desc hi!", "location!")
-        #temp.pack(fill='x')
+        self.add_button = tk.Button(self.parts_command_lf, text="Add New", command=self.add_part)
+        self.add_button.pack(side='right')
 
+    def populate_parts(self):
 
         cursor = self.conn.cursor()
         query = (f"SELECT * FROM Parts WHERE RO = {self.RO}")
 
         cursor.execute(query)
 
-        for item in cursor:
-            temp = Part(self.parts_lf, item[1], item[2])
-            temp.pack(fill='x')
+        for (r, p, l) in cursor:
+            self.data_tree.insert('', tk.END, values=(p, l))
 
         cursor.close()
         self.conn.commit()
-
-        self.add_button = tk.Button(self.parts_command_lf, text="Add New", command=self.add_part)
-        self.add_button.pack(side='right')
 
     def add_part(self):
         print(self.conn.is_connected())
         CreatePart(self.RO, self.conn, self.USER_NAME, self.PASSWORD, self.HOST, self.DATABASE, self.update_parts)
         
     def update_parts(self, desc, loc):
-        temp = Part(self.parts_lf, desc, loc)
-        temp.pack(fill='x')
+        self.data_tree.insert('', tk.END, values=(desc, loc))
 
     def get_info(self):
         #conn = mysql.connect(user=self.USER_NAME, password=self.PASSWORD, host=self.HOST, database=self.DATABASE)
